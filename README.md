@@ -1,70 +1,212 @@
-# Getting Started with Create React App
+# Task Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple React-based task management application to help you manage your tasks. This project demonstrates the use of React components, state management, hooks, and interaction with an API for CRUD operations.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+### Prerequisites
+1. **Node.js**: Ensure you have Node.js installed. Download it from [Node.js Official Website](https://nodejs.org/).
+2. **React App Setup**: Clone this repository to your local machine.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Setup Instructions
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Navigate into the project directory:
+    ```bash
+    cd task-manager
 
-### `npm test`
+3. Install the dependencies:
+    ```bash
+    npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. Set up the .env file:
+    -  Create a file named .env in the root directory.
+    -  Add the following line, replacing <API_URL> with your backend API URL:
+        ```bash
+        REACT_APP_API_BASE_URL=<API_URL>
+    - Example:
+        ```bash
+        REACT_APP_API_BASE_URL=https://your-api
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Main Files
+Here are the key files you'll be interacting with:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **`src/index.js`**:
+   - The entry point for the React app.
+   - Renders the main `App` component into the DOM.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **`src/App.js`**:
+   - Acts as a wrapper for routing and other global configurations.
 
-### `npm run eject`
+3. **`src/TaskManager.js`**:
+   - The heart of the application.
+   - Manages state, API interactions, and renders the main layout.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **`src/components`**:
+   - Contains reusable components:
+     - **`AddTask.js`**: Handles task creation.
+     - **`ActiveTasks.js`**: Displays active tasks.
+     - **`CompletedTasks.js`**: Displays completed tasks.
+     - **`EditTask.js`**: Handles task editing.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. **`src/App.css`**:
+   - Contains styles for the app.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Other Files
+- **`public/`**:
+  - Contains static files like the `index.html` template and assets.
+- **`.gitignore`**:
+  - Lists files and directories that should not be committed to version control.
+- **`package.json`**:
+  - Holds metadata about the project and dependencies.
+- **`package-lock.json`**:
+  - Records the exact versions of dependencies for consistent installs.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## Explanation of Key Features
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Tabs for Task Management
+- The app includes two tabs: **Active** and **Completed**.
+- **Active Tab**:
+  - Displays tasks that are not yet completed.
+  - Includes options to mark tasks as complete, edit, or delete them.
+- **Completed Tab**:
+  - Displays tasks that are marked as completed.
+  - Includes options to mark tasks as incomplete or delete them.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### API Integration
+- The app interacts with a backend API for CRUD operations using `fetch`.
+- **Endpoints**:
+  - `GET`: Fetch all tasks.
+  - `POST`: Create a new task.
+  - `PUT`: Update an existing task or toggle completion.
+  - `DELETE`: Remove a task.
 
-### Code Splitting
+### State Management with `useState`
+- `tasks`: Stores all tasks fetched from the backend.
+- `newTask`: Stores details for creating a new task.
+- `editTask` and `editTaskId`: Handle editing an existing task.
+- `activeTab`: Tracks the currently selected tab (Active or Completed).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Side Effects with `useEffect`
+- The `fetchTasks` function is called once on component mount to load tasks from the backend.
 
-### Analyzing the Bundle Size
+### Filtering Tasks
+- Tasks are filtered into **active** and **completed** categories:
+  ```javascript
+  const activeTasks = tasks.filter((task) => !task.isCompleted);
+  const completedTasks = tasks.filter((task) => task.isCompleted);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Modular Components
 
-### Making a Progressive Web App
+The application is structured into smaller, reusable components for better organization and maintainability. Here's an overview of the main components:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+#### **1. `AddTask.js`**
+- **Purpose**:
+  - Provides a form for creating new tasks.
+- **Props**:
+  - `newTask`: Holds the task data being entered.
+  - `setNewTask`: Updates the form data as the user inputs details.
+  - `createTask`: Function to add the new task via the backend.
 
-### Advanced Configuration
+#### **2. `ActiveTasks.js`**
+- **Purpose**:
+  - Displays the list of tasks that are not completed.
+  - Includes buttons for marking tasks as complete, editing, or deleting.
+- **Props**:
+  - `tasks`: Array of active tasks.
+  - `toggleCompletion`: Function to mark tasks as complete.
+  - `setEditTaskId`: Sets the task ID for editing.
+  - `setEditTask`: Sets the task details for the edit form.
+  - `deleteTask`: Deletes a task.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### **3. `CompletedTasks.js`**
+- **Purpose**:
+  - Displays the list of tasks that are completed.
+  - Includes buttons for marking tasks as incomplete or deleting.
+- **Props**:
+  - `tasks`: Array of completed tasks.
+  - `toggleCompletion`: Function to mark tasks as incomplete.
+  - `deleteTask`: Deletes a task.
 
-### Deployment
+#### **4. `EditTask.js`**
+- **Purpose**:
+  - Provides a form to edit an existing task's details.
+- **Props**:
+  - `editTask`: Holds the task data being edited.
+  - `setEditTask`: Updates the task data as the user edits.
+  - `updateTask`: Function to save the updated task via the backend.
+  - `setEditTaskId`: Clears the editing state when canceled.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+Each component focuses on a specific task, making the codebase easier to understand and extend. By passing props to these components, they remain flexible and reusable.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Key React Concepts Explained
+
+This section explains the React concepts used in the application in simple terms:
+
+### **1. React Functional Components**
+- The application uses **functional components**, such as `TaskManager` and the components in the `components` folder.
+- **Why Functional Components?**
+  - They are simple, clean, and easier to work with compared to class components.
+  - They support modern React features like **hooks**.
+
+### **2. State Management (`useState`)**
+- **What is `useState`?**
+  - A React hook that allows components to manage their own state.
+  - Example: 
+    ```javascript
+    const [tasks, setTasks] = useState([]);
+    ```
+    - `tasks` is the state variable to hold the task data.
+    - `setTasks` is the function to update the state.
+
+- **State Variables Used**:
+  - `tasks`: Stores all tasks fetched from the backend.
+  - `newTask`: Holds details of the task being created.
+  - `editTask` and `editTaskId`: Manage editing-related states.
+  - `activeTab`: Tracks the currently active tab (Active or Completed).
+
+### **3. Side Effects with `useEffect`**
+- **What is `useEffect`?**
+  - A React hook that performs side effects like fetching data from an API or setting up event listeners.
+  - Example:
+    ```javascript
+    useEffect(() => {
+      fetchTasks();
+    }, []);
+    ```
+    - Runs the `fetchTasks` function once when the component mounts.
+
+### **4. Props**
+- **What are Props?**
+  - Props (short for "properties") allow data to be passed from a parent component to a child component.
+  - Example:
+    ```javascript
+    <ActiveTasks
+      tasks={activeTasks}
+      toggleCompletion={toggleCompletion}
+      setEditTaskId={setEditTaskId}
+      setEditTask={setEditTask}
+      deleteTask={deleteTask}
+    />
+    ```
+    - Here, the `ActiveTasks` component receives several props for rendering and handling actions.
+
+### **5. Conditional Rendering**
+- The app uses conditional rendering to display different components or parts of the UI based on the current state.
+- Example:
+  ```javascript
+  {activeTab === "active" && (
+    <AddTask
+      newTask={newTask}
+      setNewTask={setNewTask}
+      createTask={createTask}
+    />
+  )}
