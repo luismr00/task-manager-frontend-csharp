@@ -25,7 +25,7 @@ function TaskManager() {
   // Fetch tasks from the backend
   const fetchTasks = async () => {
     try {
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(`${API_BASE_URL}/api/Tasks`);
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -36,7 +36,7 @@ function TaskManager() {
   // Create a new task
   const createTask = async () => {
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(`${API_BASE_URL}/api/Tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTask),
@@ -62,7 +62,7 @@ function TaskManager() {
   // Update an existing task
   const updateTask = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/${editTaskId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/Tasks/${editTaskId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editTask),
@@ -80,7 +80,7 @@ function TaskManager() {
   // Delete a task
   const deleteTask = async (id) => {
     try {
-      await fetch(`${API_BASE_URL}/${id}`, {
+      await fetch(`${API_BASE_URL}/api/Tasks/${id}`, {
         method: "DELETE",
       });
       fetchTasks();
@@ -92,7 +92,7 @@ function TaskManager() {
   // Toggle task completion
   const toggleCompletion = async (id) => {
     try {
-      await fetch(`${API_BASE_URL}/ToggleComplete/${id}`, {
+      await fetch(`${API_BASE_URL}/api/Tasks/ToggleComplete/${id}`, {
         method: "PUT",
       });
       fetchTasks();
