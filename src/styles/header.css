@@ -1,0 +1,42 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #007bff; /* Blue background matching the theme */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Space between welcome text and logout button */
+  }
+  
+  .header-welcome {
+    font-size: 1rem;
+    margin: 0;
+    padding-top: 5px;
+  }
+  
+  .header-logout-button {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545; /* Red for logout button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .header-logout-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }

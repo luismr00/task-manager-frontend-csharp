@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import "./styles/taskmanager.css"; // Import your CSS file for styling
 import AddTask from "./components/AddTask";
 import ActiveTasks from "./components/ActiveTasks";
 import CompletedTasks from "./components/CompletedTasks";
 import EditTask from "./components/EditTask";
+import Header from "./components/Header";
 
 function TaskManager() {
   const [tasks, setTasks] = useState([]);
@@ -111,62 +113,64 @@ function TaskManager() {
   const completedTasks = tasks.filter((task) => task.isCompleted);
 
   return (
-    <div className="task-manager">
-      <h1>Task Manager</h1>
+    <div className="task-manager-container">
+      <Header /> {/* Include the Header component */}
+      <div className="task-manager">
 
-      {/* Tabs */}
-      <div className="tabs">
-        <button
-          className={activeTab === "active" ? "active-tab" : ""}
-          onClick={() => setActiveTab("active")}
-        >
-          Active
-        </button>
-        <button
-          className={activeTab === "completed" ? "active-tab" : ""}
-          onClick={() => setActiveTab("completed")}
-        >
-          Completed
-        </button>
+        {/* Tabs */}
+        <div className="tabs">
+          <button
+            className={activeTab === "active" ? "active-tab" : ""}
+            onClick={() => setActiveTab("active")}
+          >
+            Active
+          </button>
+          <button
+            className={activeTab === "completed" ? "active-tab" : ""}
+            onClick={() => setActiveTab("completed")}
+          >
+            Completed
+          </button>
+        </div>
+
+        {/* Add New Task */}
+        {activeTab === "active" && (
+          <AddTask
+            newTask={newTask}
+            setNewTask={setNewTask}
+            createTask={createTask}
+          />
+        )}
+
+        {/* Task List */}
+        {activeTab === "active" && (
+          <ActiveTasks
+            tasks={activeTasks}
+            toggleCompletion={toggleCompletion}
+            setEditTaskId={setEditTaskId}
+            setEditTask={setEditTask}
+            deleteTask={deleteTask}
+          />
+        )}
+
+        {activeTab === "completed" && (
+          <CompletedTasks
+            tasks={completedTasks}
+            toggleCompletion={toggleCompletion}
+            deleteTask={deleteTask}
+          />
+        )}
+
+        {/* Edit Task */}
+        {editTaskId && (
+          <EditTask
+            editTask={editTask}
+            setEditTask={setEditTask}
+            updateTask={updateTask}
+            setEditTaskId={setEditTaskId}
+          />
+        )}
       </div>
-
-      {/* Add New Task */}
-      {activeTab === "active" && (
-        <AddTask
-          newTask={newTask}
-          setNewTask={setNewTask}
-          createTask={createTask}
-        />
-      )}
-
-      {/* Task List */}
-      {activeTab === "active" && (
-        <ActiveTasks
-          tasks={activeTasks}
-          toggleCompletion={toggleCompletion}
-          setEditTaskId={setEditTaskId}
-          setEditTask={setEditTask}
-          deleteTask={deleteTask}
-        />
-      )}
-
-      {activeTab === "completed" && (
-        <CompletedTasks
-          tasks={completedTasks}
-          toggleCompletion={toggleCompletion}
-          deleteTask={deleteTask}
-        />
-      )}
-
-      {/* Edit Task */}
-      {editTaskId && (
-        <EditTask
-          editTask={editTask}
-          setEditTask={setEditTask}
-          updateTask={updateTask}
-          setEditTaskId={setEditTaskId}
-        />
-      )}
     </div>
   );
 }

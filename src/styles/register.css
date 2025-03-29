@@ -1,0 +1,48 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f8f9fa; /* Light background for contrast */
+  }
+  
+  .register-title {
+    font-size: 2rem;
+    color: #28a745; /* Green color matching the "Completed" button in the task manager */
+    margin-bottom: 1rem;
+  }
+  
+  .register-input {
+    width: 80%;
+    max-width: 400px;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .register-input:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+  }
+  
+  .register-button {
+    width: 80%;
+    max-width: 400px;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-button:hover {
+    background-color: #218838;
+  }

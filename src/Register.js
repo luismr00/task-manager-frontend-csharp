@@ -1,39 +1,88 @@
 import React, { useState } from 'react';
+import './styles/register.css'; // Import your CSS file for styling
 
 function Register() {
+  const [id, setId] = useState(0);
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegister = async () => {
-    const response = await fetch('https://your-backend-url.azurewebsites.net/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (data.success) {
+    // Validate input fields before making the API call
+    if (!username || !email || !password) {
+      alert('Please fill in all fields.');
+      return;
+    }
+  
+    const payload = {
+      id, // Default value is 0, as expected by the API
+      username,
+      email,
+      password,
+    };
+  
+    console.log('Payload being sent:', payload); // Debugging: Log the payload
+  
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+  
+      if (response.status === 409) {
+        // Handle duplicate email error
+        const errorMessage = await response.text(); // Read the error message from the response
+        alert(errorMessage || 'A user with this email already exists. Please use a different email.');
+        return;
+      }
+  
+      if (!response.ok) {
+        // Handle other HTTP errors
+        const errorMessage = await response.text();
+        alert(`Registration failed: ${errorMessage || 'Unknown error'}`);
+        return;
+      }
+  
+      const data = await response.json();
       alert('Registration successful!');
-    } else {
-      alert('Registration failed!');
+      console.log('Response:', data); // Debugging: Log the response
+    } catch (error) {
+      console.error('Error during registration:', error);
+      alert('An error occurred while trying to register. Please try again.');
     }
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="register-container">
+      <h2 className="register-title">Register</h2>
+      <input
+        type="text"
+        className="register-input"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
       <input
         type="email"
+        className="register-input"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
+        className="register-input"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleRegister}>Register</button>
+      <button className="register-button" onClick={handleRegister}>
+        Register
+      </button>
+      <p className="register-login-link">
+        Already have an account? <a href="/login">Login</a>
+      </p>
     </div>
   );
 }
