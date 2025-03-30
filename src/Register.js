@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './styles/register.css'; // Import your CSS file for styling
 
 function Register() {
@@ -6,6 +7,8 @@ function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   const handleRegister = async () => {
     // Validate input fields before making the API call
@@ -21,7 +24,7 @@ function Register() {
       password,
     };
   
-    console.log('Payload being sent:', payload); // Debugging: Log the payload
+    // console.log('Payload being sent:', payload); // Debugging: Log the payload
   
     try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/register`, {
@@ -45,8 +48,9 @@ function Register() {
       }
   
       const data = await response.json();
-      alert('Registration successful!');
+      alert('Registration successful! Redirecting to login...');
       console.log('Response:', data); // Debugging: Log the response
+      navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {
       console.error('Error during registration:', error);
       alert('An error occurred while trying to register. Please try again.');

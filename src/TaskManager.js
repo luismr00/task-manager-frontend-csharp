@@ -23,11 +23,44 @@ function TaskManager() {
   const [activeTab, setActiveTab] = useState("active"); // Track active tab
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+  
+  function getUserIdFromToken(token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+          .join("")
+      );
+  
+      const payload = JSON.parse(jsonPayload);
+  
+      const userId =
+        payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      
+      return parseInt(userId);
+    } catch (err) {
+      console.error("Invalid token or could not extract user ID", err);
+      return null;
+    }
+  }
+  
+  
+  
 
   // Fetch tasks from the backend
   const fetchTasks = async () => {
     try {
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(`${API_BASE_URL}/api/Tasks`, {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json", 
+          "Authorization": `Bearer ${token}`
+        },
+      });
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -37,11 +70,26 @@ function TaskManager() {
 
   // Create a new task
   const createTask = async () => {
+
+    const userId = getUserIdFromToken(token);
+    if (!userId) {
+      console.error("User ID not found in token.");
+      return;
+    }
+
+    const taskToSend = {
+      ...newTask,
+      userId, // Inject userId from token
+    };
+
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(`${API_BASE_URL}/api/Tasks`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newTask),
+        headers: { 
+          "Content-Type": "application/json", 
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(taskToSend),
       });
       if (response.ok) {
         fetchTasks();
@@ -64,9 +112,12 @@ function TaskManager() {
   // Update an existing task
   const updateTask = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/${editTaskId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/Tasks/${editTaskId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
         body: JSON.stringify(editTask),
       });
       if (response.ok) {
@@ -82,8 +133,12 @@ function TaskManager() {
   // Delete a task
   const deleteTask = async (id) => {
     try {
-      await fetch(`${API_BASE_URL}/${id}`, {
+      await fetch(`${API_BASE_URL}/api/Tasks/${id}`, {
         method: "DELETE",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
       });
       fetchTasks();
     } catch (error) {
@@ -94,8 +149,12 @@ function TaskManager() {
   // Toggle task completion
   const toggleCompletion = async (id) => {
     try {
-      await fetch(`${API_BASE_URL}/ToggleComplete/${id}`, {
+      await fetch(`${API_BASE_URL}/api/Tasks/ToggleComplete/${id}`, {
         method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
       });
       fetchTasks();
     } catch (error) {

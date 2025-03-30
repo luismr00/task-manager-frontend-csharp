@@ -20,7 +20,6 @@ function Login({ setIsAuthenticated }) {
       localStorage.setItem('username', data.username); // Store username in localStorage
       setIsAuthenticated(true);
       navigate('/'); // Redirect to the main page after successful login
-      console.log('Token:', data.token); // For debugging purposes
     } else {
       alert('Login failed!');
     }
